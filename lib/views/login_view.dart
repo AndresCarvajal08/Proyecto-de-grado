@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_gr/views/register_view.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -134,7 +135,12 @@ class LoginView extends StatelessWidget {
                     
                     const SizedBox(height: 30),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const RegisterView()),
+                        );
+                      },
                       child: const Text(
                         "¿No tienes cuenta? Regístrate aquí",
                         style: TextStyle(color: Colors.white70, fontSize: 15),

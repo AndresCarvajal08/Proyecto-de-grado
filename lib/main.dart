@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'views/login_view.dart'; // Importamos tu nueva vista
+import 'views/splash_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,9 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Transporte Cali',
       debugShowCheckedModeBanner: false,
-      home: const LoginView(), // Pantalla inicial
+      title: 'Rutas Cali',
+      home: const SplashView(), // <-- Cambiamos LoginView por SplashView
     );
   }
 }
+
