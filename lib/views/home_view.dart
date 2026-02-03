@@ -3,6 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';      // Corregido el import a latlong2
 import 'route_detail_view.dart';
 import 'settings_view.dart';
+import 'profile_view.dart';
+import 'companies_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -105,8 +107,8 @@ class _HomeViewState extends State<HomeView> {
           maxChildSize: 0.7,
           builder: (context, scrollController) {
             return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
                 boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
               ),
@@ -225,10 +227,26 @@ class _HomeViewState extends State<HomeView> {
             title: const Text("Mis Viajes"),
             onTap: () {},
           ),
+
           ListTile(
-            leading: const Icon(Icons.payment_rounded),
-            title: const Text("Métodos de Pago"),
-            onTap: () {},
+            leading: const Icon(Icons.favorite_rounded),
+            title: const Text("Mi Perfil"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ProfileView()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.business_rounded),
+            title: const Text("Empresas Afiliadas"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CompaniesView()),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.settings_rounded),
