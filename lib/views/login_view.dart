@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_gr/views/register_view.dart';
 import 'package:proyecto_gr/views/home_view.dart';
+import 'forgot_password_view.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -100,7 +101,12 @@ class LoginView extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const ForgotPasswordView()),
+                                );
+                              },
                               child: const Text("¿Olvidaste tu contraseña?", 
                                 style: TextStyle(color: Color(0xFF01579B), fontSize: 13)),
                             ),

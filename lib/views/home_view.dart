@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart'; // Librería del mapa
-import 'package:latlong2/latlong.dart';      // Manejo de coordenadas
+import 'package:flutter_map/flutter_map.dart'; 
+import 'package:latlong2/latlong.dart';      // Corregido el import a latlong2
 import 'route_detail_view.dart';
+import 'settings_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -35,9 +36,9 @@ class _HomeViewState extends State<HomeView> {
         selectedItemColor: const Color(0xFF01579B),
         onTap: (index) => setState(() => _selectedIndex = index),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Alertas'),
+          BottomNavigationBarItem(icon: Icon(Icons.map_rounded), label: 'Mapa'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite_rounded), label: 'Favoritos'),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications_active_rounded), label: 'Alertas'),
         ],
       ),
     );
@@ -48,22 +49,21 @@ class _HomeViewState extends State<HomeView> {
       case 0:
         return _buildMapaPrincipal();
       case 1:
-        return const Center(child: Text("Próximamente: Tus Rutas Favoritas"));
+        return _buildFavoritosTab();
       case 2:
-        return const Center(child: Text("Próximamente: Alertas de Tráfico"));
+        return _buildAlertasTab();
       default:
         return _buildMapaPrincipal();
     }
   }
 
-  // --- VISTA CON MAPA Y LISTA DESLIZABLE ---
+  // --- 1. VISTA DE MAPA ---
   Widget _buildMapaPrincipal() {
     return Stack(
       children: [
-        // 1. EL MAPA (OpenStreetMap)
         FlutterMap(
-          options: MapOptions(
-            initialCenter: LatLng(3.4215, -76.5445), // Centro cerca de Siloé, Cali
+          options: const MapOptions(
+            initialCenter: LatLng(3.4215, -76.5445),
             initialZoom: 14.5,
           ),
           children: [
@@ -73,9 +73,8 @@ class _HomeViewState extends State<HomeView> {
             ),
             MarkerLayer(
               markers: [
-                // Marcador de ejemplo (donde estaría una guala)
                 Marker(
-                  point: LatLng(3.4215, -76.5445),
+                  point: const LatLng(3.4215, -76.5445),
                   width: 40,
                   height: 40,
                   child: const Icon(Icons.directions_bus, color: Color(0xFF01579B), size: 30),
@@ -84,12 +83,8 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
-
-        // 2. BUSCADOR FLOTANTE
         Positioned(
-          top: 15,
-          left: 15,
-          right: 15,
+          top: 15, left: 15, right: 15,
           child: Material(
             elevation: 4,
             borderRadius: BorderRadius.circular(30),
@@ -104,12 +99,10 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
         ),
-
-        // 3. HOJA DESLIZABLE (Bottom Sheet)
         DraggableScrollableSheet(
-          initialChildSize: 0.3, // Empieza ocupando el 30% de la pantalla
-          minChildSize: 0.15,    // Mínimo para que se vea el título
-          maxChildSize: 0.7,     // Hasta donde puede subir
+          initialChildSize: 0.3,
+          minChildSize: 0.15,
+          maxChildSize: 0.7,
           builder: (context, scrollController) {
             return Container(
               decoration: const BoxDecoration(
@@ -121,7 +114,6 @@ class _HomeViewState extends State<HomeView> {
                 controller: scrollController,
                 padding: const EdgeInsets.all(15),
                 children: [
-                  // Rayita estética para deslizar
                   Center(child: Container(width: 40, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
                   const SizedBox(height: 20),
                   const Text("Rutas Disponibles", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -139,6 +131,51 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  // --- 2. VISTA DE FAVORITOS ---
+  Widget _buildFavoritosTab() {
+    return ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        const Text("Tus lugares frecuentes", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 20),
+        _buildFavoriteItem(Icons.home, "Casa", "Loma de la Cruz"),
+        _buildFavoriteItem(Icons.work, "Trabajo", "Centro Comercial Cosmocentro"),
+      ],
+    );
+  }
+
+  Widget _buildFavoriteItem(IconData icon, String title, String sub) {
+    return ListTile(
+      leading: CircleAvatar(backgroundColor: Colors.blue.shade50, child: Icon(icon, color: const Color(0xFF01579B))),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+      subtitle: Text(sub),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+    );
+  }
+
+  // --- 3. VISTA DE ALERTAS ---
+  Widget _buildAlertasTab() {
+    return ListView(
+      padding: const EdgeInsets.all(15),
+      children: [
+        _buildAlertCard("Vía Cerrada", "Bloqueo en la subida a Siloé por reparaciones.", Colors.red),
+        _buildAlertCard("Lluvia fuerte", "Precaución en Terrón Colorado por piso mojado.", Colors.orange),
+      ],
+    );
+  }
+
+  Widget _buildAlertCard(String title, String desc, Color color) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: ListTile(
+        leading: Icon(Icons.warning_amber_rounded, color: color, size: 30),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(desc),
+      ),
+    );
+  }
+
+  // --- RUTA CARD ---
   Widget _buildRutaCard(BuildContext context, String nombre, String frecuencia, Color color) {
     return Card(
       elevation: 1,
@@ -162,20 +199,51 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  // --- DRAWER (MENÚ LATERAL) RE-ESTILIZADO ---
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: Column(
         children: [
-          const UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF01579B)),
-            accountName: Text("Usuario Guala"),
-            accountEmail: Text("usuario@cali.com"),
-            currentAccountPicture: CircleAvatar(backgroundColor: Colors.white, child: Icon(Icons.person, color: Color(0xFF01579B))),
+          UserAccountsDrawerHeader(
+            decoration: const BoxDecoration(
+              color: Color(0xFF01579B),
+              image: DecorationImage(
+                image: NetworkImage('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=2069&auto=format&fit=crop'), 
+                fit: BoxFit.cover,
+                opacity: 0.2,
+              ),
+            ),
+            accountName: const Text("Usuario Guala", style: TextStyle(fontWeight: FontWeight.bold)),
+            accountEmail: const Text("usuario@cali.com"),
+            currentAccountPicture: const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, color: Color(0xFF01579B), size: 40),
+            ),
           ),
-          ListTile(leading: const Icon(Icons.settings), title: const Text("Configuración"), onTap: () {}),
+          ListTile(
+            leading: const Icon(Icons.history_rounded),
+            title: const Text("Mis Viajes"),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.payment_rounded),
+            title: const Text("Métodos de Pago"),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings_rounded),
+            title: const Text("Configuración"),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const SettingsView()),
+              );
+            },
+          ),
+          const Divider(),
           const Spacer(),
           ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
+            leading: const Icon(Icons.logout_rounded, color: Colors.red),
             title: const Text("Cerrar Sesión", style: TextStyle(color: Colors.red)),
             onTap: () => Navigator.pop(context),
           ),
