@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_gr/views/register_view.dart';
+import 'package:proyecto_gr/views/home_view.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -117,7 +118,12 @@ class LoginView extends StatelessWidget {
                               ),
                             ),
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => HomeView()),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
@@ -125,7 +131,7 @@ class LoginView extends StatelessWidget {
                               ),
                               child: const Text(
                                 "INGRESAR",
-                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
