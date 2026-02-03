@@ -5,128 +5,143 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
+      body: Container(
+        // Graduación de fondo para que no sea un color plano aburrido
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF03A9F4), Color(0xFF01579B)],
+          ),
+        ),
+        child: Stack(
           children: [
-            // Parte Superior con Curva y Logo
-            Stack(
-              children: [
-                Container(
-                  height: size.height * 0.45,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF03A9F4), // Tu azul del mockup
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(80),
+            // Círculos decorativos de fondo para dar estilo moderno
+            Positioned(
+              top: -50,
+              right: -50,
+              child: CircleAvatar(radius: 100, backgroundColor: Colors.white.withOpacity(0.1)),
+            ),
+            
+            Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "RUTAS CALI",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 35,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 3,
+                      ),
                     ),
-                  ),
-                ),
-                SafeArea(
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        const Text(
-                          "RUTAS CALI",
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 2,
-                          ),
+                    const SizedBox(height: 40),
+                    
+                    // Contenedor del Logo con Neumorfismo ligero
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(70),
+                          topRight: Radius.circular(40),
+                          bottomLeft: Radius.circular(50),
+                          bottomRight: Radius.circular(80),
                         ),
-                        const SizedBox(height: 30),
-                        // ESPACIO PARA TU FOTO LOCAL
-                        Container(
-                          height: 180,
-                          width: 180,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 10,
-                                spreadRadius: 5,
-                              )
-                            ],
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 25,
+                            offset: const Offset(0, 10),
+                          )
+                        ],
+                      ),
+                      child: Image.asset(
+                        'assets/logo.png',
+                        height: 120,
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 50),
+                    
+                    // Tarjeta de Login estilo Glassmorphism
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.95),
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          _buildCustomField(
+                            label: "Correo Electrónico",
+                            icon: Icons.alternate_email_rounded,
                           ),
-                          child: ClipOval(
-                            child: Image.asset(
-                              'assets/logo.png', // CAMBIA ESTO POR TU RUTA
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) => 
-                                  const Icon(Icons.directions_bus, size: 80, color: Colors.orange),
+                          const SizedBox(height: 20),
+                          _buildCustomField(
+                            label: "Contraseña",
+                            icon: Icons.lock_person_rounded,
+                            isPassword: true,
+                          ),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () {},
+                              child: const Text("¿Olvidaste tu contraseña?", 
+                                style: TextStyle(color: Color(0xFF01579B), fontSize: 13)),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            // Formulario de Inicio de Sesión
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
-              child: Column(
-                children: [
-                  _buildTextField(
-                    hint: 'Correo electrónico',
-                    icon: Icons.email_outlined,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildTextField(
-                    hint: 'Contraseña',
-                    icon: Icons.lock_outline,
-                    isPassword: true,
-                  ),
-                  const SizedBox(height: 15),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text("¿Olvidaste tu contraseña?", 
-                        style: TextStyle(color: Colors.grey)),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0277BD),
-                      minimumSize: const Size(double.infinity, 55),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      elevation: 5,
-                    ),
-                    child: const Text(
-                      "INICIAR SESIÓN",
-                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("¿No eres miembro? "),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Text(
-                          "Regístrate",
-                          style: TextStyle(
-                            color: Color(0xFF03A9F4),
-                            fontWeight: FontWeight.bold,
+                          const SizedBox(height: 10),
+                          
+                          // Botón con gradiente
+                          Container(
+                            width: double.infinity,
+                            height: 55,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF03A9F4), Color(0xFF0277BD)],
+                              ),
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                              ),
+                              child: const Text(
+                                "INGRESAR",
+                                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    
+                    const SizedBox(height: 30),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        "¿No tienes cuenta? Regístrate aquí",
+                        style: TextStyle(color: Colors.white70, fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -135,20 +150,19 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  // Widget auxiliar para campos de texto más limpios
-  Widget _buildTextField({required String hint, required IconData icon, bool isPassword = false}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: TextField(
-        obscureText: isPassword,
-        decoration: InputDecoration(
-          hintText: hint,
-          prefixIcon: Icon(icon, color: const Color(0xFF03A9F4)),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 15),
+  // Widget para campos de texto más limpios y modernos
+  Widget _buildCustomField({required String label, required IconData icon, bool isPassword = false}) {
+    return TextField(
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+        prefixIcon: Icon(icon, color: const Color(0xFF03A9F4)),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFF03A9F4), width: 2),
         ),
       ),
     );
