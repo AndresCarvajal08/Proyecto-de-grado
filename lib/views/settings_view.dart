@@ -14,7 +14,6 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  bool _darkMode = false;
   bool _proximityAlerts = true;
   bool _shareLocation = false;
 

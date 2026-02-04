@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart'; 
 import 'package:latlong2/latlong.dart';      // Corregido el import a latlong2
+import 'driver_panel_view.dart';
 import 'route_detail_view.dart';
 import 'settings_view.dart';
 import 'profile_view.dart';
@@ -263,7 +264,11 @@ class _HomeViewState extends State<HomeView> {
           ListTile(
             leading: const Icon(Icons.logout_rounded, color: Colors.red),
             title: const Text("Cerrar Sesión", style: TextStyle(color: Colors.red)),
-            onTap: () => Navigator.pop(context),
+            onTap: () {
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const DriverPanelView()),
+                );
+            }
           ),
           const SizedBox(height: 20),
         ],

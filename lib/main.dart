@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_gr/views/home_view.dart';
+import 'package:proyecto_gr/views/splash_view.dart';
 // import 'views/splash_view.dart'; // Descoméntalo si vas a usar el Splash primero
 
 // Notificador global para el cambio de tema
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           themeMode: currentMode,
           
           // Cambia a SplashView() si quieres que inicie con la carga
-          home: const HomeView(), 
+          home: const SplashView(), 
         );
       },
     );
