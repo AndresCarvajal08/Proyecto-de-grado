@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_gr/views/register_view.dart';
-import 'package:proyecto_gr/views/home_view.dart';
 import 'forgot_password_view.dart';
+import 'package:proyecto_gr/views/admin_dashboard_view.dart';
 
-class LoginView extends StatelessWidget {
+// Cambiamos a StatefulWidget para poder usar los TextEditingControllers
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  // Definimos los controladores para capturar el texto
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Es buena práctica limpiar los controladores al cerrar la vista
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // Graduación de fondo para que no sea un color plano aburrido
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -20,13 +37,12 @@ class LoginView extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Círculos decorativos de fondo para dar estilo moderno
             Positioned(
               top: -50,
               right: -50,
-              child: CircleAvatar(radius: 100, backgroundColor: Colors.white.withOpacity(0.1)),
+              child: CircleAvatar(
+                  radius: 100, backgroundColor: Colors.white.withOpacity(0.1)),
             ),
-            
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -43,8 +59,6 @@ class LoginView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    
-                    // Contenedor del Logo con Neumorfismo ligero
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -68,10 +82,7 @@ class LoginView extends StatelessWidget {
                         height: 120,
                       ),
                     ),
-                    
                     const SizedBox(height: 50),
-                    
-                    // Tarjeta de Login estilo Glassmorphism
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -90,12 +101,14 @@ class LoginView extends StatelessWidget {
                           _buildCustomField(
                             label: "Correo Electrónico",
                             icon: Icons.alternate_email_rounded,
+                            controller: emailController, // Conectado
                           ),
                           const SizedBox(height: 20),
                           _buildCustomField(
                             label: "Contraseña",
                             icon: Icons.lock_person_rounded,
                             isPassword: true,
+                            controller: passwordController, // Conectado
                           ),
                           const SizedBox(height: 10),
                           Align(
@@ -104,16 +117,17 @@ class LoginView extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const ForgotPasswordView()),
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ForgotPasswordView()),
                                 );
                               },
-                              child: const Text("¿Olvidaste tu contraseña?", 
-                                style: TextStyle(color: Color(0xFF01579B), fontSize: 13)),
+                              child: const Text("¿Olvidaste tu contraseña?",
+                                  style: TextStyle(
+                                      color: Color(0xFF01579B), fontSize: 13)),
                             ),
                           ),
                           const SizedBox(height: 10),
-                          
-                          // Botón con gradiente
                           Container(
                             width: double.infinity,
                             height: 55,
@@ -125,32 +139,50 @@ class LoginView extends StatelessWidget {
                             ),
                             child: ElevatedButton(
                               onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => HomeView()),
-                                );
+                                // LÓGICA DE VALIDACIÓN QUEMADA
+                                if (emailController.text == "admin@omniruta.com" &&
+                                    passwordController.text == "admin123") {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AdminDashboardView()),
+                                  );
+                                } else {
+                                  // Mensaje por si fallan las credenciales
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Credenciales incorrectas"),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
                               ),
                               child: const Text(
                                 "INGRESAR",
-                                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    
                     const SizedBox(height: 30),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const RegisterView()),
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterView()),
                         );
                       },
                       child: const Text(
@@ -168,9 +200,14 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  // Widget para campos de texto más limpios y modernos
-  Widget _buildCustomField({required String label, required IconData icon, bool isPassword = false}) {
+  // Widget de campo de texto actualizado para aceptar el controlador
+  Widget _buildCustomField(
+      {required String label,
+      required IconData icon,
+      required TextEditingController controller, // Nuevo parámetro
+      bool isPassword = false}) {
     return TextField(
+      controller: controller, // Asignamos el controlador aquí
       obscureText: isPassword,
       decoration: InputDecoration(
         labelText: label,
