@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:proyecto_gr/views/splash_view.dart';
+import 'viewmodels/map_viewmodel.dart';
 // import 'views/splash_view.dart'; // Descoméntalo si vas a usar el Splash primero
 
 // Notificador global para el cambio de tema
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => MapViewModel()),
+    ], child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {

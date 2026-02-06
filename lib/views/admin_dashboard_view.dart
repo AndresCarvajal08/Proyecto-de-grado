@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_gr/views/admin_empresas_view.dart';
+import 'package:proyecto_gr/views/admin_reportes_view';
 import 'admin_solicitudes_view.dart';
 import 'admin_map_view.dart';
+
 
 class AdminDashboardView extends StatefulWidget {
   const AdminDashboardView({super.key});
@@ -16,8 +19,8 @@ class _AdminDashboardViewState extends State<AdminDashboardView> {
   final List<Widget> _pages = [
     const AdminHomeRoutes(), // Conductores con rutas activas
     const AdminMapView(),
-    const Center(child: Text("Cooperativas Afiliadas", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-    const Center(child: Text("Métricas de Servicio", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+    const AdminEmpresasView(),
+    const AdminReportesView(),
   ];
 
   @override
@@ -25,7 +28,11 @@ class _AdminDashboardViewState extends State<AdminDashboardView> {
     return Scaffold(
       backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(
-        title: const Text("Control Operativo Cali", style: TextStyle(fontSize: 18)),
+        title: const Text(
+          "Control Operativo Cali",
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xFF01579B),
         elevation: 0,
       ),

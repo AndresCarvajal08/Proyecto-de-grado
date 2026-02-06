@@ -4,11 +4,8 @@ import 'package:latlong2/latlong.dart';
 import 'driver_settings_view.dart';
 import 'driver_operation_time_view.dart';
 import 'driver_trips_view.dart';
-// Make sure the class in driver_trips_view.dart is named DriverTripsView
-
-// Importa aquí tus otras vistas para que la navegación no de error
-// import 'package:tu_proyecto/views/profile_view.dart';
-// import 'package:tu_proyecto/views/settings_view.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/map_viewmodel.dart';
 
 class DriverPanelView extends StatefulWidget {
   const DriverPanelView({super.key});
@@ -20,10 +17,22 @@ class DriverPanelView extends StatefulWidget {
 class _DriverPanelViewState extends State<DriverPanelView> {
   bool _isTransmitting = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  
+  // Agregamos el controlador para que la cámara siga al bus
+  final MapController _mapController = MapController();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Escuchamos al ViewModel para obtener posición y puntos de ruta
+    final mapVm = context.watch<MapViewModel>();
+
+    // Mueve la cámara automáticamente al recibir nueva posición
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_isTransmitting) {
+        _mapController.move(mapVm.busPos, _mapController.camera.zoom);
+      }
+    });
 
     return Scaffold(
       key: _scaffoldKey,
@@ -40,29 +49,50 @@ class _DriverPanelViewState extends State<DriverPanelView> {
       body: Stack(
         children: [
           FlutterMap(
-            options: const MapOptions(
-              initialCenter: LatLng(3.4243, -76.5543),
+            mapController: _mapController, // Asignamos el controlador
+            options: MapOptions(
+              initialCenter: const LatLng(3.4516, -76.5320), // Centro inicial de Cali
               initialZoom: 15.0,
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.tu_proyecto.app',
               ),
+              
+              // AGREGADO: Capa de línea para ver el recorrido por las calles
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: List.from(mapVm.routePoints), // Puntos guardados en el ViewModel
+                    strokeWidth: 4.0,
+                    color: Colors.blueAccent.withOpacity(0.7),
+                  ),
+                ],
+              ),
+
               MarkerLayer(
                 markers: [
                   Marker(
-                    point: const LatLng(3.4243, -76.5543),
-                    width: 80,
-                    height: 80,
-                    child: Icon(Icons.location_on, size: 40, color: theme.primaryColor),
+                    point: mapVm.busPos, // Posición real del bus desde el ViewModel
+                    width: 40,
+                    height: 60,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
+                      ),
+                      child: Icon(Icons.directions_bus, color: Colors.green, size: 30),
+
+                    ),
                   ),
                 ],
               ),
             ],
           ),
 
-          // PANEL INFERIOR
+          // PANEL INFERIOR (Tu diseño original intacto)
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -106,7 +136,14 @@ class _DriverPanelViewState extends State<DriverPanelView> {
                     width: double.infinity,
                     height: 65,
                     child: ElevatedButton(
-                      onPressed: () => setState(() => _isTransmitting = !_isTransmitting),
+                      onPressed: () {
+                        setState(() => _isTransmitting = !_isTransmitting);
+
+                        if (_isTransmitting) {  
+                          // Usamos read para la acción del botón
+                          context.read<MapViewModel>().arrancarBus(); 
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _isTransmitting ? Colors.redAccent : Colors.green,
                         foregroundColor: Colors.white,
@@ -128,7 +165,7 @@ class _DriverPanelViewState extends State<DriverPanelView> {
     );
   }
 
-  // --- MENU LATERAL (DRAWER) ADAPTADO AL CONDUCTOR ---
+  // --- MENU LATERAL (DRAWER) - Tu diseño original ---
   Widget _buildDriverDrawer(BuildContext context, ThemeData theme) {
     return Drawer(
       child: Column(
@@ -161,8 +198,7 @@ class _DriverPanelViewState extends State<DriverPanelView> {
             title: const Text("Mis Recorridos de Hoy"),
             onTap: () {
               Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const DriverTripsView()));
-              // If you still get an error, check driver_trips_view.dart for the correct class name and use it here.
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const DriverTripsView()));
             },
           ),
 
@@ -191,7 +227,6 @@ class _DriverPanelViewState extends State<DriverPanelView> {
             leading: const Icon(Icons.logout_rounded, color: Colors.red),
             title: const Text("Cerrar Sesión", style: TextStyle(color: Colors.red)),
             onTap: () {
-              // Aquí deberías navegar de vuelta al LoginView o pantalla de inicio
               Navigator.pop(context); 
             },
           ),

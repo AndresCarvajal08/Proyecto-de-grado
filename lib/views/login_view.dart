@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_gr/views/driver_panel_view.dart';
+import 'package:proyecto_gr/views/home_view.dart';
 import 'package:proyecto_gr/views/register_view.dart';
 import 'forgot_password_view.dart';
 import 'package:proyecto_gr/views/admin_dashboard_view.dart';
+
 
 // Cambiamos a StatefulWidget para poder usar los TextEditingControllers
 class LoginView extends StatefulWidget {
@@ -140,13 +143,29 @@ class _LoginViewState extends State<LoginView> {
                             child: ElevatedButton(
                               onPressed: () {
                                 // LÓGICA DE VALIDACIÓN QUEMADA
-                                if (emailController.text == "admin@omniruta.com" &&
+                                if (emailController.text == "admin@gmail.com" &&
                                     passwordController.text == "admin123") {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             const AdminDashboardView()),
+                                  );
+                                } else if (emailController.text == "user@gmail.com" &&
+                                    passwordController.text == "user123") {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomeView()),
+                                  );
+                                }else if (emailController.text == "driver@gmail.com" &&
+                                    passwordController.text == "driver123") {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DriverPanelView()),
                                   );
                                 } else {
                                   // Mensaje por si fallan las credenciales
